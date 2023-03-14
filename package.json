@@ -18,7 +18,8 @@
     "eject": "react-scripts eject",
     "lint:check": "eslint ./src --ext .ts,.tsx",
     "pretty:check": "prettier --check ./src",
-    "pretty:fix": "prettier --write ./src"
+    "pretty:fix": "prettier --write ./src",
+    "types": "tsc --pretty --noEmit"
   },
   "eslintConfig": {
     "extends": [

@@ -92,7 +92,7 @@ jobs:
 
       - name: Fix types check
         run: |
-          npm run tsc
+          npm run types
 
   test:
     needs: [linters, prettier, types]
