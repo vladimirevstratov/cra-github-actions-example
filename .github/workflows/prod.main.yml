@@ -38,7 +38,7 @@ jobs:
 
       - name: Check lint
         run: |
-          npm run lint
+          npm run lint:check
 
   prettier:
     needs: linters
@@ -65,7 +65,7 @@ jobs:
 
       - name: Check prettier
         run: |
-          npm run pretty
+          npm run pretty:check
 
   types:
     needs: [linters, prettier]
