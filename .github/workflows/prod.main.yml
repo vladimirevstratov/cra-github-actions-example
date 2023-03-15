@@ -120,3 +120,8 @@ jobs:
       - name: Tests
         run: |
           npm run test
+
+  android-production-test-lab:
+    needs: [linters, prettier, types]
+    uses: ./.github/workflows/test.yml
+    secrets: inherit

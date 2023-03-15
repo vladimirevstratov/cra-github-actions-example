@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    name: Run UI tests for Android with Firebase Test Lab
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@master
+
+      - name: Cache Node Modules
+        id: node-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            lib/*/node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install node modules
+        run: |
+          npm install
+
+      - name: Tests
+        run: |
+          npm run test
