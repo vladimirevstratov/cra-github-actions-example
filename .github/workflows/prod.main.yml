@@ -4,7 +4,7 @@ name: Production CI
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push events but only for the main branch
   push:
     branches: [ main ]
 
@@ -13,13 +13,12 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  # This workflow contains a single job called "linters"
   linters:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - uses: actions/setup-node@master
 
@@ -46,7 +45,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - uses: actions/setup-node@master
 
@@ -73,7 +71,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - uses: actions/setup-node@master
 
@@ -98,3 +95,37 @@ jobs:
     needs: [linters, prettier, types]
     uses: ./.github/workflows/test.yml
     secrets: inherit
+
+  build:
+    needs: [linters, prettier, types, test]
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@master
+
+      - name: Cache Node Modules
+        id: node-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            lib/*/node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install node modules
+        run: |
+          npm install
+
+      - name: Build project
+        id: build_project
+        run: |
+          npm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Build
+          path: build
+
